@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wafiq Fuadi.NET</title>
+<style>
+body {
+    margin:0;
+    font-family:"Poppins",sans-serif;
+    background: linear-gradient(45deg, #8a2be2, #00bfff);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    position:relative;
+}
+body::before {
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    border:6px solid;
+    border-image: linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet, red);
+    border-image-slice: 1;
+    animation: rgbBorder 3s linear infinite;
+    pointer-events:none;
+}
+@keyframes rgbBorder {
+    0%   { border-image: linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet, red); border-image-slice:1; }
+    25%  { border-image: linear-gradient(45deg, orange, yellow, green, cyan, blue, violet, red, orange); border-image-slice:1; }
+    50%  { border-image: linear-gradient(45deg, yellow, green, cyan, blue, violet, red, orange, yellow); border-image-slice:1; }
+    75%  { border-image: linear-gradient(45deg, green, cyan, blue, violet, red, orange, yellow, green); border-image-slice:1; }
+    100% { border-image: linear-gradient(45deg, red, orange, yellow, green, cyan, blue, violet, red); border-image-slice:1; }
+}
+.box {
+    background: rgba(0,0,0,0.55);
+    padding:25px;
+    width:350px;
+    border-radius:12px;
+    text-align:center;
+    box-sizing:border-box;
+    position:relative;
+    z-index:1;
+}
+h1 { margin-bottom:8px; color:#ffe47a; }
+h2 { margin-bottom:15px; color:#ffe47a; font-weight:normal; }
+input[type="text"], input[type="password"] {
+    width:80%; padding:14px; margin:10px 0; border:none; border-radius:10px;
+    outline:none; background:#222; color:white; font-size:16px;
+}
+button {
+    width:85%; padding:14px; margin-top:12px; border:none; border-radius:10px;
+    background:#ffe47a; color:black; font-weight:bold; cursor:pointer; font-size:16px;
+}
+button:hover { background:#ddc166; }
+.robot-container { display:flex; align-items:center; justify-content:center; margin-bottom:20px; gap:10px; }
+a.app-btn {
+    display:block; width:85%; margin:12px auto; padding:14px; border-radius:10px;
+    text-decoration:none; background:rgba(0,0,0,0.4); color:#ffe47a; font-weight:500;
+    text-align:center; font-size:16px; opacity:0; transform: translateY(20px); transition: all 0.5s ease;
+}
+a.app-btn.show { opacity:1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="box">
+    <h1>Login Page !!!</h1>
+    <h2>Wafiq Fuadi.NET</h2>
+    <input type="text" id="username" placeholder="Masukkan username">
+    <input type="password" id="password" placeholder="Masukkan password">
+    <button onclick="login()">Login</button>
+    <p id="error" style="color:red; font-size:13px;"></p>
+</div>
+
+<!-- ROBOT PAGE -->
+<div id="robotPage" class="box" style="display:none;">
+    <h2>Konfirmasi Keamanan</h2>
+    <div class="robot-container">
+        <input type="checkbox" id="robotCheck">
+        <label for="robotCheck">Saya bukan robot</label>
+    </div>
+    <button onclick="goToMenu()">Lanjut</button>
+</div>
+
+<!-- MENU PAGE -->
+<div id="menuPage" class="box" style="display:none;">
+    <h2 id="welcomeText"></h2>
+    <a class="app-btn" href="#" onclick="openApp('instagram')" >Instagram</a>
+    <a class="app-btn" href="#" onclick="openApp('whatsapp')">WhatsApp</a>
+    <a class="app-btn" href="#" onclick="openApp('tiktok')">TikTok</a>
+    <a class="app-btn" href="#" onclick="openApp('threads')">Threads</a>
+</div>
+
+<script>
+let userNameInput="";
+function login(){
+    let user = document.getElementById("username").value.trim();
+    let pass = document.getElementById("password").value.trim();
+    const regex = /^[a-zA-Z0-9]+$/;
+    if(user.length < 8 || pass.length < 8){
+        document.getElementById("error").innerText="Username & password minimal 8 karakter"; return;
+    }
+    if(!regex.test(user) || !regex.test(pass)){
+        document.getElementById("error").innerText="Username & password hanya boleh huruf & angka"; return;
+    }
+    userNameInput = user;
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("robotPage").style.display="block";
+}
+function goToMenu(){
+    if(!document.getElementById("robotCheck").checked){
+        alert("Silakan centang 'Saya bukan robot'"); return;
+    }
+    document.getElementById("robotPage").style.display="none";
+    const menu = document.getElementById("menuPage");
+    menu.style.display="block";
+    document.getElementById("welcomeText").innerText = "Selamat datang "+userNameInput+" di Wafiq Fuadi.NET, silakan pilih untuk melanjutkan Wafiq Fuadi.NET";
+    document.querySelectorAll('.app-btn').forEach((btn, i)=>{
+        setTimeout(()=>{ btn.classList.add('show'); }, i*150);
+    });
+}
+function openApp(app){
+    let intentURL='', webURL='';
+    switch(app){
+        case 'instagram': intentURL='intent://instagram.com/#Intent;package=com.instagram.android;end'; webURL='https://www.instagram.com/'; break;
+        case 'whatsapp': intentURL='intent://send/#Intent;package=com.whatsapp;end'; webURL='https://web.whatsapp.com/'; break;
+        case 'tiktok': intentURL='intent://www.tiktok.com/#Intent;package=com.zhiliaoapp.musically;end'; webURL='https://www.tiktok.com/'; break;
+        case 'threads': intentURL='intent://threads.net/#Intent;package=com.instagram.threads;end'; webURL='https://www.threads.net/'; break;
+    }
+    window.location.href=intentURL;
+    setTimeout(()=>{ window.location.href=webURL; },1500);
+}
+</script>
+
+</body>
+</html>
